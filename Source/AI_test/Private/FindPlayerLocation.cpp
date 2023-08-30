@@ -13,7 +13,10 @@ UFindPlayerLocation::UFindPlayerLocation(const FObjectInitializer& initializer)
 EBTNodeResult::Type UFindPlayerLocation::ExecuteTask(UBehaviorTreeComponent& comp, uint8_t* node)
 {
 	AAI_controller& controller = *Cast<AAI_controller>(comp.GetAIOwner());
-	controller.GetBlackboard()->SetValueAsVector(TEXT("PointOfInterest"), controller.GetTargetActor()->GetActorLocation());
+	AActor* player = Cast<AActor>(controller.GetBlackboard()->GetValueAsObject(TEXT("Player")));
+
+	if (player)
+		controller.GetBlackboard()->SetValueAsVector(TEXT("PointOfInterest"), player->GetActorLocation());
 
 	return EBTNodeResult::Succeeded;
 }

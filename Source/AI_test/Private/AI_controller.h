@@ -25,7 +25,7 @@ public:
 
 	inline UBlackboardComponent* GetBlackboard() const { return Blackboard; };
 
-	inline const AActor* GetTargetActor() const { return _target; };
+	//inline AActor* GetTargetActor() const { return _target; };
 
 	FGenericTeamId GetGenericTeamId() const override { return _team; };
 
@@ -64,8 +64,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
 	float _health = 100.f;
-
-	class AActor* _target;
 
 	FVector _patrolPoint;
 };

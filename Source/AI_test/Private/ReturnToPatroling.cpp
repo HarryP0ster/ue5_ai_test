@@ -14,6 +14,8 @@ UReturnToPatroling::UReturnToPatroling()
 EBTNodeResult::Type UReturnToPatroling::ExecuteTask(UBehaviorTreeComponent& comp, uint8_t* node)
 {
 	Cast<AAI_controller>(comp.GetAIOwner())->GetBlackboard()->SetValueAsBool(TEXT("ChaseActive"), false);
+	Cast<AAI_controller>(comp.GetAIOwner())->GetBlackboard()->SetValueAsBool(TEXT("HearsPlayer"), false);
+	Cast<AAI_controller>(comp.GetAIOwner())->GetBlackboard()->SetValueAsBool(TEXT("SeesPlayer"), false);
 
 	return EBTNodeResult::Succeeded;
 }

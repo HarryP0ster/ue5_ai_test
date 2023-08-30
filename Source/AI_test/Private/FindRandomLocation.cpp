@@ -4,11 +4,12 @@
 #include "FindRandomLocation.h"
 #include <Runtime/NavigationSystem/Public/NavigationSystem.h>
 #include <BehaviorTree/BlackboardComponent.h>
+#include <BehaviorTree/Blackboard/BlackboardKeyType_Object.h>
 #include "AI_controller.h"
 
 UFindRandomLocation::UFindRandomLocation(const FObjectInitializer& initializer)
 {
-
+	
 }
 
 EBTNodeResult::Type UFindRandomLocation::ExecuteTask(UBehaviorTreeComponent& comp, uint8_t* node)

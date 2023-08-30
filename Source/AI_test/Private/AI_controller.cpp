@@ -17,6 +17,8 @@
 #include <Kismet/GameplayStatics.h>
 #include <Sound/SoundWave.h>
 #include <BrainComponent.h>
+#include <Math/UnrealMathUtility.h>
+#include <Runtime/NavigationSystem/Public/NavigationSystem.h>
 
 #define StartBrainless
 
@@ -158,15 +160,23 @@ void AAI_controller::OnPerceptionUpdated(AActor* actor, FAIStimulus stimulus)
 		if (soundCue && !Blackboard->GetValueAsBool("ChaseActive"))
 			UGameplayStatics::PlaySound2D(GetWorld(), soundCue, 0.35f);
 		Blackboard->SetValueAsBool(TEXT("ChaseActive"), true);
-		_target = actor;
+		Blackboard->SetValueAsObject(TEXT("Player"), actor);
 		break;
 	case 1:
 		if (actor != GetPawn() 
 			&& Cast<IGenericTeamAgentInterface>(Cast<APawn>(actor)->GetController())->GetGenericTeamId() != GetGenericTeamId())
 		{
-			Blackboard->SetValueAsBool(TEXT("HearsPlayer"), stimulus.WasSuccessfullySensed());
-			Blackboard->SetValueAsVector(TEXT("PointOfInterest"), actor->GetActorLocation());
-			_target = actor;
+			if (stimulus.WasSuccessfullySensed())
+			{
+				FNavLocation target;
+
+				const auto& navigation = *UNavigationSystemV1::GetCurrent(GetWorld());
+				if (navigation.GetRandomPointInNavigableRadius(actor->GetActorLocation(), 1000.f, target))
+					Blackboard->SetValueAsVector(TEXT("PointOfInterest"), target.Location);
+
+				Blackboard->SetValueAsObject(TEXT("Player"), actor);
+				Blackboard->SetValueAsBool(TEXT("HearsPlayer"), true);
+			}
 		}
 		break;
 	case 2:
@@ -174,6 +184,7 @@ void AAI_controller::OnPerceptionUpdated(AActor* actor, FAIStimulus stimulus)
 		if (soundCue && !Blackboard->GetValueAsBool("ChaseActive"))
 			UGameplayStatics::PlaySound2D(GetWorld(), soundCue, 0.35f);
 		Blackboard->SetValueAsBool(TEXT("ChaseActive"), true);
+		Blackboard->SetValueAsObject(TEXT("Player"), actor);
 		break;
 	default:
 		break;
